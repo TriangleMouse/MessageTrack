@@ -12,7 +12,16 @@
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
         AllowsTransparency="True" 
-        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+        MouseLeftButtonDown="Window_MouseLeftButtonDown"
+        
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{DynamicResource MaterialDesignFont}">
     <Window.Resources>
         <Style TargetType="{x:Type Border}">
             <Setter Property="CornerRadius" Value="15"/>
@@ -21,12 +30,12 @@
     <Border CornerRadius="15">
         <DockPanel x:Name="MainDockPanel">
             <DockPanel Height="30" Background="#FF1534AF" DockPanel.Dock="Top" VerticalAlignment="Top"  >
-                <Button x:Name="CloseButton" Click="CloseButton_Click" Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                <Button x:Name="CloseButton" Click="CloseButton_Click" Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right" BorderBrush="#FF223CA4">
                     <Button.Background>
                         <ImageBrush ImageSource="/close_64px.png"/>
                     </Button.Background>
                 </Button>
-                <Button x:Name="MinimizeButton" Click="MinimizeButton_Click" Width="30" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                <Button x:Name="MinimizeButton" Click="MinimizeButton_Click" Width="30" HorizontalAlignment="Right" DockPanel.Dock="Right" BorderBrush="#FF223CA4">
                     <Button.Background>
                         <ImageBrush ImageSource="/subtract_64px.png"/>
                     </Button.Background>

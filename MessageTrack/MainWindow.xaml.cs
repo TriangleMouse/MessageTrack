@@ -1,14 +1,6 @@
-﻿using System.Text;
+﻿using MessageTrack.PL.Pages;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MessageTrack.PL.Pages;
 
 namespace MessageTrack
 {
@@ -20,7 +12,7 @@ namespace MessageTrack
         public MainWindow(MainPage mainPage)
         {
             InitializeComponent();
-            MainFrame.Content = mainPage;
+            MainFrame.Navigate(mainPage);
         }
 
         private void CloseButton_Click(object sender, RoutedEventArgs e)

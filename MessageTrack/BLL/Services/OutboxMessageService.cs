@@ -30,5 +30,11 @@ namespace MessageTrack.BLL.Services
 
             return outboxMessagesDtos;
         }
+
+
+        private string GenerateRegNumber()
+        {
+            return "";
+        }
     }
 }

@@ -1,0 +1,28 @@
+﻿<Page x:Class="MessageTrack.PL.Pages.DataPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:MessageTrack.PL.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DataPage" Background="White">
+    <StackPanel>
+        <DockPanel>
+            <TextBox  Width="200" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" />
+            <TextBox  Width="200" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" />
+        </DockPanel>
+        <DockPanel>
+
+            <TextBox Width="Auto" Height="161" Margin="20,20,20,0" 
+         CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" 
+         BorderBrush="#FF223CA4" AcceptsReturn="True" />
+        </DockPanel>
+        <DockPanel>
+            <TextBox
+                materialDesign:HintAssist.Hint="Hey, that's pretty good!"
+                Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}" />
+        </DockPanel>
+    </StackPanel>
+</Page>
