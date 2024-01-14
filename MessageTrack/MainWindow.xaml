@@ -1,0 +1,40 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MessageTrack"
+        xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="MessageTrack.MainWindow"
+        mc:Ignorable="d"
+        Title="Custom Title Bar" 
+        Height="550"
+        Width="900"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
+        AllowsTransparency="True" 
+        MouseLeftButtonDown="Window_MouseLeftButtonDown">
+    <Window.Resources>
+        <Style TargetType="{x:Type Border}">
+            <Setter Property="CornerRadius" Value="15"/>
+        </Style>
+    </Window.Resources>
+    <Border CornerRadius="15">
+        <DockPanel x:Name="MainDockPanel">
+            <DockPanel Height="30" Background="#FF1534AF" DockPanel.Dock="Top" VerticalAlignment="Top"  >
+                <Button x:Name="CloseButton" Click="CloseButton_Click" Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/close_64px.png"/>
+                    </Button.Background>
+                </Button>
+                <Button x:Name="MinimizeButton" Click="MinimizeButton_Click" Width="30" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/subtract_64px.png"/>
+                    </Button.Background>
+                </Button>
+            </DockPanel>
+
+
+            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
+        </DockPanel>
+    </Border>
+</Window>
