@@ -2,8 +2,11 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using MessageTrack.BLL.Interfaces;
+using System.Windows.Controls;
+using MessageTrack.PL.Pages;
 
 namespace MessageTrack.PL.ViewModels
 {
@@ -82,6 +85,11 @@ namespace MessageTrack.PL.ViewModels
         private async Task Add()
         {
             // Откройте новую страницу для добавления записи асинхронно
+            var frame = Application.Current.MainWindow.FindName("MainFrame") as Frame;
+            if (frame != null)
+            {
+                frame.Navigate(new DataPage());
+            }
         }
 
         private async Task View()

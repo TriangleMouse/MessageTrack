@@ -40,6 +40,7 @@ namespace MessageTrack
                 .AddSingleton<MainWindow>()
                 .AddScoped<MainPage>()
                 .AddScoped<MainPageViewModel>()
+                .AddTransient<DataPage>()
                 .BuildServiceProvider();
 
             // Resolve the MainWindow and set it as the application's main window
