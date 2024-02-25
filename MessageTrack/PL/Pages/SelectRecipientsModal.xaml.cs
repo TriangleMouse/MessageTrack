@@ -10,21 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
-using MessageTrack.PL.ViewModels;
 
 namespace MessageTrack.PL.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для DataPage.xaml
+    /// Логика взаимодействия для SelectRecipientsModal.xaml
     /// </summary>
-    public partial class DataPage : Page
+    public partial class SelectRecipientsModal : Window
     {
-        public DataPage(DataViewModel dataViewModel)
+        public SelectRecipientsModal()
         {
             InitializeComponent();
-            DataContext = dataViewModel;
         }
     }
 }

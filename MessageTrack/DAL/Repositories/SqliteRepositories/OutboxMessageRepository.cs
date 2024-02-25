@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
+﻿using Dapper;
 using MessageTrack.DAL.Entities;
 using MessageTrack.DAL.Interfaces.Repositories;
 using MessageTrack.DAL.Repositories.Base;
+using System.Data;
 
 namespace MessageTrack.DAL.Repositories.SqliteRepositories
 {
@@ -23,10 +18,33 @@ namespace MessageTrack.DAL.Repositories.SqliteRepositories
 
             await SafeExecuteAsync(async () =>
             {
-                outboxMessages = await Connection.QueryAsync<OutboxMessage>("select Id, Date_Created, Reg_Number, External_Recipient_Id, Notes from Outbox_Message", transaction: Transaction);
+                outboxMessages = await Connection.QueryAsync<OutboxMessage>("select Id, DateCreated, RegNumber, ExternalRecipientId, Notes from Outbox_Message", transaction: Transaction);
             });
 
             return outboxMessages;
+        }
+
+        public async Task<OutboxMessage> GetLastOutboxMessage()
+        {
+            OutboxMessage message = default;
+
+            await SafeExecuteAsync(async () =>
+            {
+                message = await Connection.QueryFirstOrDefaultAsync<OutboxMessage>(
+                    "SELECT Id, DateCreated, RegNumber, ExternalRecipientId, Notes FROM Outbox_Message ORDER BY id DESC LIMIT 1");
+            });
+
+            return message;
+        }
+
+        public async Task<int> CreateOutboxMessage(OutboxMessage message)
+        {
+            await SafeExecuteAsync(async () =>
+            { 
+                await Connection.ExecuteAsync("insert into Outbox_Message (DateCreated, RegNumber, ExternalRecipientId, Notes) values(@DateCreated,  @RegNumber, @ExternalRecipientId, @Notes) ", new { DateCreated = message.DateCreated, RegNumber = message.RegNumber, ExternalRecipientId = message.ExternalRecipientId, Notes = message.Notes }, transaction: Transaction);
+            });
+
+            return default;
         }
     }
 }

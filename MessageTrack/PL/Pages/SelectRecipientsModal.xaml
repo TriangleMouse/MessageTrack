@@ -1,0 +1,61 @@
+﻿<Window x:Class="MessageTrack.PL.Pages.SelectRecipientsModal"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MessageTrack.PL.Pages"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="SelectRecipientsModal" 
+        Height="340"
+        Width="450"
+        WindowStyle="None"
+        Cursor="Hand"
+        ResizeMode="CanResizeWithGrip"
+        AllowsTransparency="True" 
+        >
+    <StackPanel Cursor="Hand">
+        <DockPanel Height="20" Background="#FF1534AF" DockPanel.Dock="Top" Cursor="Hand"  >
+            <Button x:Name="CloseButton" Cursor="Hand" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Width="22" Foreground="White" BorderBrush="{x:Null}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalContentAlignment="Stretch">
+                <Button.Style>
+                    <Style TargetType="Button">
+                        <Setter Property="Content" Value="{materialDesign:PackIcon Close }" />
+                        <Setter Property="Cursor" Value="Hand"/>
+                    </Style>
+                </Button.Style>
+            </Button>
+        </DockPanel>
+        <TextBox Text="{Binding SearchText}" Width="200" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4"  />
+        <ListView Height="211" Margin="15,15,15,15" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+        </ListView>
+        <DockPanel Margin="0,-2,20,0">
+            <Button
+                Command="{Binding SaveCommand}"
+                materialDesign:ButtonAssist.CornerRadius="5"
+                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                ToolTip="Сохранить"
+                Background="#FF1534AF" 
+                Content="Сохранить"
+                Height="36" 
+                Width="93" 
+                DockPanel.Dock="Right" 
+                HorizontalAlignment="Right" 
+                Margin="10,0,0,0" 
+                BorderBrush="#FF1534AF"
+                Foreground="#DDFFFFFF" Cursor="Hand" FontSize="12"/>
+            <Button
+                Command="{Binding CancelCommand}"
+                materialDesign:ButtonAssist.CornerRadius="5"
+                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                ToolTip="Отмена"
+                Background="#FF1534AF" 
+                Content="Отмена"
+                Height="36" 
+                Width="93" 
+                DockPanel.Dock="Right" 
+                HorizontalAlignment="Right" 
+                BorderBrush="#FF1534AF"
+                Foreground="#DDFFFFFF" Cursor="Hand" FontSize="12"/>
+        </DockPanel>
+    </StackPanel>
+</Window>

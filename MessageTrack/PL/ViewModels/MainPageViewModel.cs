@@ -1,28 +1,37 @@
-﻿using MessageTrack.BLL.DTOs;
+﻿using MessageTrack.BLL.Interfaces;
+using MessageTrack.BLL.Services;
+using MessageTrack.PL.Models;
+using MessageTrack.PL.Pages;
+using Microsoft.Extensions.DependencyInjection;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
-using MessageTrack.BLL.Interfaces;
 using System.Windows.Controls;
-using MessageTrack.PL.Pages;
+using System.Windows.Input;
+using System.Linq;
+using AutoMapper;
+using MessageTrack.BLL.DTOs;
 
 namespace MessageTrack.PL.ViewModels
 {
-    public class MainPageViewModel
+    public class MainPageViewModel : INotifyPropertyChanged
     {
-        private string searchText;
-        private int selectedYear;
-        private int selectedMonth;
-        private ObservableCollection<OutboxMessageDto> messages;
+        private readonly IServiceProvider _provider;
+        private readonly IMapper _mapper;
+        private readonly IOutboxMessageService _outboxMessageService;
+        private readonly IExternalRecipientService _externalRecipientService;
+        private string _searchText;
+        private int _selectedYear;
+        private int _selectedMonth;
+        private ObservableCollection<OutboxMessageModel> _messages;
 
         public string SearchText
         {
-            get => searchText;
+            get => _searchText;
             set
             {
-                searchText = value;
+                _searchText = value;
                 OnPropertyChanged();
                 FilterMessages();
             }
@@ -30,10 +39,10 @@ namespace MessageTrack.PL.ViewModels
 
         public int SelectedYear
         {
-            get => selectedYear;
+            get => _selectedYear;
             set
             {
-                selectedYear = value;
+                _selectedYear = value;
                 OnPropertyChanged();
                 FilterMessages();
             }
@@ -41,21 +50,21 @@ namespace MessageTrack.PL.ViewModels
 
         public int SelectedMonth
         {
-            get => selectedMonth;
+            get => _selectedMonth;
             set
             {
-                selectedMonth = value;
+                _selectedMonth = value;
                 OnPropertyChanged();
                 FilterMessages();
             }
         }
 
-        public ObservableCollection<OutboxMessageDto> Messages
+        public ObservableCollection<OutboxMessageModel> Messages
         {
-            get => messages;
+            get => _messages;
             set
             {
-                messages = value;
+                _messages = value;
                 OnPropertyChanged();
             }
         }
@@ -65,15 +74,35 @@ namespace MessageTrack.PL.ViewModels
         public ICommand EditCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
 
-        public MainPageViewModel(IOutboxMessageService outboxMessageService, IExternalRecipientService externalRecipientService)
+        public MainPageViewModel(IServiceProvider provider, IMapper mapper, IOutboxMessageService outboxMessageService, IExternalRecipientService externalRecipientService)
         {
+            _mapper = mapper;
+            _provider = provider;
+            _outboxMessageService = outboxMessageService;
+            _externalRecipientService = externalRecipientService;
+           
             AddCommand = new RelayCommand(async () => await Add());
             ViewCommand = new RelayCommand(async () => await View());
             EditCommand = new RelayCommand(async () => await Edit());
             DeleteCommand = new RelayCommand(async () => await Delete());
 
             // Получите сообщения из вашего сервиса асинхронно
-            Task.Run(async () => Messages = new ObservableCollection<OutboxMessageDto>(await outboxMessageService.GetOutboxMessages()));
+            //Task.Run(async () => );
+        }
+
+        public async Task LoadData()
+        {
+            var externalRecipients = await _externalRecipientService.GetExternalRecipients();
+            var messagesDto = await _outboxMessageService.GetOutboxMessages();
+            var messages = _mapper.Map<IEnumerable<OutboxMessageDto>, IEnumerable<OutboxMessageModel>>(messagesDto);
+
+            foreach (var outboxMessageModel in messages)
+            {
+                outboxMessageModel.NameExternalRecipient = externalRecipients.FirstOrDefault(externalRecipient =>
+                    externalRecipient.Id == outboxMessageModel.ExternalRecipientId).Name;
+            }
+
+            Messages = new ObservableCollection<OutboxMessageModel>(messages);
         }
 
         private async Task FilterMessages()
@@ -88,7 +117,9 @@ namespace MessageTrack.PL.ViewModels
             var frame = Application.Current.MainWindow.FindName("MainFrame") as Frame;
             if (frame != null)
             {
-                frame.Navigate(new DataPage());
+                var dataPage = _provider.GetService<DataPage>();
+
+                frame.Navigate(dataPage);
             }
         }
 

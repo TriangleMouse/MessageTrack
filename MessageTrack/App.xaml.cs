@@ -22,6 +22,7 @@ namespace MessageTrack
         {
             // Configure the DI container
             var serviceProvider = new ServiceCollection()
+                .AddScoped<IBaseService, BaseService>()
                 .AddScoped<IOutboxMessageService, OutboxMessageService>()
                 .AddScoped<IExternalRecipientService, ExternalRecipientService>()
                 .AddScoped<IUnitOfWork>(s => new SqliteUnitOfWork("MessageTrack.db"))
@@ -41,6 +42,7 @@ namespace MessageTrack
                 .AddScoped<MainPage>()
                 .AddScoped<MainPageViewModel>()
                 .AddTransient<DataPage>()
+                .AddTransient<DataViewModel>()
                 .BuildServiceProvider();
 
             // Resolve the MainWindow and set it as the application's main window

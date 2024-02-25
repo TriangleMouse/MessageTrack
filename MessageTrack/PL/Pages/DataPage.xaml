@@ -6,41 +6,138 @@
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       xmlns:local="clr-namespace:MessageTrack.PL.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="500" d:DesignWidth="800"
       Title="DataPage" Background="White">
-    <StackPanel>
-        <DockPanel>
-            <Button Content="tes" HorizontalAlignment="Left" Width="35" Height="35" BorderBrush="White" Margin="20,10,0,0">
-                <Button.Background>
-                    <ImageBrush ImageSource="/PL/Pages/back_64px.png"/>
-                </Button.Background>
-            </Button>
-        </DockPanel>
+        <StackPanel>
+            <DockPanel>
+                <Button
+                     Command="{Binding BackCommand}"
+                     Style="{StaticResource MaterialDesignIconButton}"
+                     ToolTip="Назад"
+                     Width="30"
+                     Margin="20,10,0,0"
+                     HorizontalAlignment="Left"
+                     Height="30"
+                     Foreground="#FF1534AF"
+                     BorderBrush="White">
+                    <Button.Background>
+                        <ImageBrush ImageSource="/PL/Pages/back_64px.png" Stretch="Fill"/>
+                    </Button.Background>
+                </Button>
+            </DockPanel>
         <DockPanel Margin="0,10,0,0">
-            <TextBox  Width="200" HorizontalAlignment="Left" Height="25" Margin="20,10,0,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" materialDesign:HintAssist.Hint="Регистрационный номер"/>
-            <TextBox  Width="200" HorizontalAlignment="Left" Height="25" Margin="20,10,0,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4"  materialDesign:HintAssist.Hint="Дата от какого числа"/>
+            <TextBox
+                Text="{Binding Message.RegNumber, Mode=TwoWay}"
+                FontSize="14"
+                Width="200" 
+                Height="50"
+                Margin="20,10,0,0"
+                VerticalAlignment="Top"
+                AcceptsReturn="True"
+                IsEnabled="False"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                TextWrapping="NoWrap" 
+                BorderBrush="#FF304EC5"
+                CaretBrush="#FF1534AF" 
+                SelectionBrush="#FF284BD8"
+                materialDesign:HintAssist.Foreground="#FF1534AF"
+                materialDesign:HintAssist.Hint="Регистрационный номер"
+                />
+            <TextBox
+                Text="{Binding Message.DateCreated, Mode=TwoWay}"
+                FontSize="14"
+                Width="200" 
+                Height="50"
+                IsEnabled="False"
+                Margin="20,10,0,0"
+                VerticalAlignment="Top"
+                AcceptsReturn="True"
+                Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                TextWrapping="NoWrap" 
+                BorderBrush="#FF304EC5"
+                CaretBrush="#FF1534AF" 
+                SelectionBrush="#FF284BD8"
+                materialDesign:HintAssist.Foreground="#FF1534AF"
+                materialDesign:HintAssist.Hint="Дата регистрации" HorizontalAlignment="Left"
+                />
         </DockPanel>
         <DockPanel Margin="0,10,0,0">
             <StackPanel Orientation="Horizontal" Margin="20,10,20,0">
-                <TextBox Height="25" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4"  materialDesign:HintAssist.Hint="Получатель" Width="702"/>
-                <Button  HorizontalContentAlignment="Right" Margin="15,0,0,0" Width="32" Height="32">
-                    <Button.Background>
-                        <ImageBrush ImageSource="/PL/Pages/shared_mail_64px.png"/>
-                    </Button.Background>
-                    <Button.BorderBrush >
-                        <ImageBrush/>
-                    </Button.BorderBrush>
-                </Button>
+                <TextBox
+                    Text="{Binding Message.NameExternalRecipient, Mode=TwoWay}"
+                    FontSize="14"
+                    Width="702" 
+                    Height="50"
+                    Margin="0,0,0,0"
+                    VerticalAlignment="Top"
+                    AcceptsReturn="True"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    TextWrapping="NoWrap" 
+                    BorderBrush="#FF304EC5"
+                    CaretBrush="#FF1534AF" 
+                    SelectionBrush="#FF284BD8"
+                    materialDesign:HintAssist.Hint="Получатель"
+                    materialDesign:HintAssist.Foreground="#FF1534AF"
+                    />
+                    <Button
+                        Command="{Binding SelectExternalRecipientCommand}"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}"
+                        ToolTip="Выбрать получателя" BorderBrush="#00000000" Margin="10,0,0,0"
+                    >
+                        <Button.Background>
+                            <ImageBrush ImageSource="/PL/Pages/shared_mail_64px.png"/>
+                        </Button.Background>
+                    </Button>
             </StackPanel>
         </DockPanel>
         <DockPanel Margin="0,10,0,0">
-            <TextBox Width="Auto" Height="208" Margin="20,10,20,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" AcceptsReturn="True" materialDesign:HintAssist.Hint="Примечание"/>
+            <StackPanel>
+                <TextBox
+                    Text="{Binding Message.Notes, Mode=TwoWay}"
+                    FontSize="14"
+                    Height="208"
+                    VerticalAlignment="Top"
+                    materialDesign:HintAssist.Hint="Примечание"
+                    materialDesign:TextFieldAssist.CharacterCounterVisibility="{Binding  ElementName=MaterialDesignOutlinedPasswordFieldTextCountComboBox, Converter={StaticResource BooleanToVisibilityConverter}}"
+                    MaxLength="500"
+                    Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                    TextWrapping="Wrap"
+                    BorderBrush="#FF304EC5"
+                    CaretBrush="#FF1534AF" 
+                    SelectionBrush="#FF284BD8"
+                    materialDesign:HintAssist.Foreground="#FF1534AF"
+                    VerticalScrollBarVisibility="Auto" Margin="20,10,20,0" MinLines="9" />
+            </StackPanel>
         </DockPanel>
-        <DockPanel Margin="0,20,20,0">
-            <Button Background="#FF1534AF" Content="Сохранить" Height="50" Width="100" DockPanel.Dock="Right" HorizontalAlignment="Right" Margin="10,0,0,0" BorderBrush="#FF1534AF">
-
-            </Button>
-            <Button Background="#FF1534AF" Content="Отмена" Height="50" Width="100" DockPanel.Dock="Right" HorizontalAlignment="Right" Foreground="#DDFFFFFF" BorderBrush="#FF1534AF"/>
+            <DockPanel Margin="0,20,20,0">
+            <Button
+                Command="{Binding SaveCommand}"
+                materialDesign:ButtonAssist.CornerRadius="5"
+                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                ToolTip="Сохранить"
+                Background="#FF1534AF" 
+                Content="Сохранить"
+                Height="50" 
+                Width="100" 
+                DockPanel.Dock="Right" 
+                HorizontalAlignment="Right" 
+                Margin="10,0,0,0" 
+                BorderBrush="#FF1534AF"
+                Foreground="#DDFFFFFF"/>
+            <Button
+                Command="{Binding CancelCommand}"
+                materialDesign:ButtonAssist.CornerRadius="5"
+                Style="{StaticResource MaterialDesignRaisedLightButton}"
+                ToolTip="Отмена"
+                Background="#FF1534AF" 
+                Content="Отмена"
+                Height="50" 
+                Width="100" 
+                DockPanel.Dock="Right" 
+                HorizontalAlignment="Right" 
+                BorderBrush="#FF1534AF"
+                Foreground="#DDFFFFFF"/>
         </DockPanel>
-    </StackPanel>
+        </StackPanel>
 </Page>
