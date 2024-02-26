@@ -28,22 +28,59 @@
         </Style>
     </Window.Resources>
     <Border CornerRadius="15">
-        <DockPanel x:Name="MainDockPanel">
-            <DockPanel Height="30" Background="#FF1534AF" DockPanel.Dock="Top" VerticalAlignment="Top"  >
-                <Button x:Name="CloseButton" Click="CloseButton_Click" Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right" BorderBrush="#FF223CA4">
-                    <Button.Background>
-                        <ImageBrush ImageSource="/close_64px.png"/>
-                    </Button.Background>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Row="0" Grid.ColumnSpan="2" Height="30" Background="#FF1534AF">
+                <!--<Button x:Name="MenuButton" Click="MenuButton_Click" Width="30" DockPanel.Dock="Left" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" BorderBrush="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Content" Value="{materialDesign:PackIcon Menu }" />
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Style>
+                    </Button.Style>
+                </Button>-->
+                <Button x:Name="CloseButton" Click="CloseButton_Click" Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" BorderBrush="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="FontSize" Value="50"/>
+                            <Setter Property="Content" Value="{materialDesign:PackIcon Close }" />
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Style>
+                    </Button.Style>
                 </Button>
-                <Button x:Name="MinimizeButton" Click="MinimizeButton_Click" Width="30" HorizontalAlignment="Right" DockPanel.Dock="Right" BorderBrush="#FF223CA4">
-                    <Button.Background>
-                        <ImageBrush ImageSource="/subtract_64px.png"/>
-                    </Button.Background>
+                <Button x:Name="MinimizeButton" Click="MinimizeButton_Click" Width="30" HorizontalAlignment="Right" DockPanel.Dock="Right" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" BorderBrush="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Content" Value="{materialDesign:PackIcon WindowMinimize }" />
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="FontSize" Value="30"/>
+                        </Style>
+                    </Button.Style>
                 </Button>
             </DockPanel>
 
+            <Frame x:Name="MainFrame" Grid.Row="1" Grid.Column="1" NavigationUIVisibility="Hidden" />
 
-            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" />
-        </DockPanel>
+            <DockPanel Grid.Row="2" Grid.ColumnSpan="2" Height="30">
+                <Button x:Name="ReloadButton"  Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="#FF1534AF" BorderBrush="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Content" Value="{materialDesign:PackIcon Reload }" />
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </DockPanel>
+        </Grid>
+
     </Border>
 </Window>

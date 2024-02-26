@@ -44,7 +44,7 @@ namespace MessageTrack.BLL.Services
 
         private async Task<string> GenerateRegNumber()
         {
-            var regexPattern = "\\s*(?<Day>\\d\\d)-(?<Month>\\d\\d)/(?<UniqueNumberOnMonth>\\d)";
+            var regexPattern = "\\s*(?<Day>\\d*)-(?<Month>\\d*)/(?<UniqueNumberOnMonth>\\d*)";
             int uniqueNumberOnMonth = 1;
 
             var lastMessage = await GetLastOutboxMessage();

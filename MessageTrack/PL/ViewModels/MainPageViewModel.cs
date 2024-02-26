@@ -69,6 +69,7 @@ namespace MessageTrack.PL.ViewModels
             }
         }
 
+        public ICommand LoadDataCommand { get; set; }
         public ICommand AddCommand { get; private set; }
         public ICommand ViewCommand { get; private set; }
         public ICommand EditCommand { get; private set; }
@@ -80,21 +81,19 @@ namespace MessageTrack.PL.ViewModels
             _provider = provider;
             _outboxMessageService = outboxMessageService;
             _externalRecipientService = externalRecipientService;
-           
-            AddCommand = new RelayCommand(async () => await Add());
-            ViewCommand = new RelayCommand(async () => await View());
-            EditCommand = new RelayCommand(async () => await Edit());
-            DeleteCommand = new RelayCommand(async () => await Delete());
 
-            // Получите сообщения из вашего сервиса асинхронно
-            //Task.Run(async () => );
+            LoadDataCommand = new RelayCommand(async () => await LoadData());
+            AddCommand = new RelayCommand(async () => await Add());
+            ViewCommand = new RelayCommand<OutboxMessageModel>(async (message) => await View(message));
+            EditCommand = new RelayCommand<OutboxMessageModel>(async (message) => await Edit(message));
+            DeleteCommand = new RelayCommand<OutboxMessageModel>(async (message) => await Delete(message));
         }
 
         public async Task LoadData()
         {
-            var externalRecipients = await _externalRecipientService.GetExternalRecipients();
-            var messagesDto = await _outboxMessageService.GetOutboxMessages();
-            var messages = _mapper.Map<IEnumerable<OutboxMessageDto>, IEnumerable<OutboxMessageModel>>(messagesDto);
+            IEnumerable<ExternalRecipientDto> externalRecipients = await _externalRecipientService.GetExternalRecipients();
+            IEnumerable<OutboxMessageDto> messagesDto = await _outboxMessageService.GetOutboxMessages();
+            IEnumerable<OutboxMessageModel> messages = _mapper.Map<IEnumerable<OutboxMessageDto>, IEnumerable<OutboxMessageModel>>(messagesDto);
 
             foreach (var outboxMessageModel in messages)
             {
@@ -123,17 +122,17 @@ namespace MessageTrack.PL.ViewModels
             }
         }
 
-        private async Task View()
+        private async Task View(OutboxMessageModel message)
         {
             // Просмотр сообщения асинхронно
         }
 
-        private async Task Edit()
+        private async Task Edit(OutboxMessageModel message)
         {
             // Изменение сообщения асинхронно
         }
 
-        private async Task Delete()
+        private async Task Delete(OutboxMessageModel message)
         {
             // Удаление сообщения асинхронно
         }
