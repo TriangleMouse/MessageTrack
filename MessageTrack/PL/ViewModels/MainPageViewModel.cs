@@ -124,7 +124,17 @@ namespace MessageTrack.PL.ViewModels
 
         private async Task View(OutboxMessageModel message)
         {
-            // Просмотр сообщения асинхронно
+            var dataViewModel = _provider.GetRequiredService<DataViewModel>();
+            dataViewModel.Message = message;
+            var dataPage = _provider.GetRequiredService<DataPage>();
+            
+            var frame = Application.Current.MainWindow.FindName("MainFrame") as Frame;
+            if (frame != null)
+            {
+                dataPage.DataContext = dataViewModel;
+
+                frame.Navigate(dataPage);
+            }
         }
 
         private async Task Edit(OutboxMessageModel message)

@@ -11,7 +11,6 @@
   <ItemGroup>
     <None Remove="close_64px.png" />
     <None Remove="PL\Pages\back_64px.png" />
-    <None Remove="PL\Pages\plus_math_64px.png" />
     <None Remove="PL\Pages\search_64px.png" />
     <None Remove="PL\Pages\shared_mail_64px.png" />
     <None Remove="subtract_64px.png" />
@@ -33,7 +32,6 @@
   <ItemGroup>
     <Resource Include="close_64px.png" />
     <Resource Include="PL\Pages\back_64px.png" />
-    <Resource Include="PL\Pages\plus_math_64px.png" />
     <Resource Include="PL\Pages\search_64px.png" />
     <Resource Include="PL\Pages\shared_mail_64px.png" />
     <Resource Include="subtract_64px.png" />

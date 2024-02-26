@@ -41,7 +41,7 @@
                 </Button.Cursor>
             </Button>
         </DockPanel>
-        <DataGrid ItemsSource="{Binding Messages}" Margin="0,10,0,0" AutoGenerateColumns="False" IsReadOnly="True" HorizontalAlignment="Stretch">
+        <DataGrid x:Name="DataGridMessages"  ItemsSource="{Binding Messages}" Margin="0,10,0,0" AutoGenerateColumns="False" IsReadOnly="True" HorizontalAlignment="Stretch">
             <DataGrid.Columns>
                 <materialDesign:DataGridTextColumn Header ="Регистрационный номер"  Binding="{Binding RegNumber}" Width="*"/>
                 <materialDesign:DataGridTextColumn Header ="Дата создания"  Binding="{Binding DateCreated}" Width="*"/>
@@ -55,6 +55,11 @@
                     <MenuItem Header="Удалить" Command="{Binding DeleteCommand}" CommandParameter="{Binding PlacementTarget.SelectedItem, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"/>
                 </ContextMenu>
             </DataGrid.ContextMenu>
+            <DataGrid.InputBindings>
+                <MouseBinding Gesture="LeftDoubleClick" 
+                              Command="{Binding ViewCommand}" 
+                              CommandParameter="{Binding ElementName=DataGridMessages, Path=SelectedItem}" />
+            </DataGrid.InputBindings>
         </DataGrid>
     </StackPanel>
 </Page>
