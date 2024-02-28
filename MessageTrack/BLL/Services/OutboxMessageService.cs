@@ -54,7 +54,7 @@ namespace MessageTrack.BLL.Services
                 var match = new Regex(regexPattern).Match(lastMessage.RegNumber);
                 var lastMessageUniqueNumber = int.Parse(match.Groups["UniqueNumberOnMonth"].Value);
 
-                if (DateTime.Now.Month > lastMessage.DateCreated.Month)
+                if (DateTime.Now.Month <= lastMessage.DateCreated.Month)
                     uniqueNumberOnMonth = ++lastMessageUniqueNumber;
             }
             

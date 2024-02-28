@@ -16,6 +16,7 @@ namespace MessageTrack.PL.ViewModels
         private readonly IExternalRecipientService _externalRecipientService;
         private readonly IOutboxMessageService _outboxMessageService;
 
+        private bool _isEditForm = true;
         private OutboxMessageModel _message;
 
 
@@ -25,6 +26,16 @@ namespace MessageTrack.PL.ViewModels
             set
             {
                 _message = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsEditForm
+        {
+            get => _isEditForm;
+            set
+            {
+                _isEditForm = value;
                 OnPropertyChanged();
             }
         }
@@ -88,7 +99,7 @@ namespace MessageTrack.PL.ViewModels
             await _outboxMessageService.CreateOutboxMessage(outboxMessage);
 
             _baseService.Commit();
-
+            IsEditForm = true;
         }
 
         private async Task View()
@@ -100,7 +111,6 @@ namespace MessageTrack.PL.ViewModels
         {
            
         }
-
 
         public event PropertyChangedEventHandler PropertyChanged;
 

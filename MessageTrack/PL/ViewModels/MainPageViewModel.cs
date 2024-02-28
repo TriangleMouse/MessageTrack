@@ -126,6 +126,7 @@ namespace MessageTrack.PL.ViewModels
         {
             var dataViewModel = _provider.GetRequiredService<DataViewModel>();
             dataViewModel.Message = message;
+            dataViewModel.IsEditForm = false;
             var dataPage = _provider.GetRequiredService<DataPage>();
             
             var frame = Application.Current.MainWindow.FindName("MainFrame") as Frame;

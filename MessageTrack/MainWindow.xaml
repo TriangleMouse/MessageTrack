@@ -48,21 +48,27 @@
                         </Style>
                     </Button.Style>
                 </Button>-->
-                <Button x:Name="CloseButton" Click="CloseButton_Click" Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" BorderBrush="{x:Null}">
+                <Button x:Name="CloseButton" Click="CloseButton_Click" Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Background="Transparent" Foreground="White" BorderBrush="{x:Null}">
                     <Button.Style>
                         <Style TargetType="Button">
-                            <Setter Property="FontSize" Value="50"/>
-                            <Setter Property="Content" Value="{materialDesign:PackIcon Close }" />
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <materialDesign:PackIcon Name="icon" Kind="Close" Height="28" HorizontalAlignment="Center" Width="29" VerticalAlignment="Center" />
+                                </Setter.Value>
+                            </Setter>
                             <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                     </Button.Style>
                 </Button>
-                <Button x:Name="MinimizeButton" Click="MinimizeButton_Click" Width="30" HorizontalAlignment="Right" DockPanel.Dock="Right" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="White" BorderBrush="{x:Null}">
+                <Button x:Name="MinimizeButton" Click="MinimizeButton_Click" Width="30" HorizontalAlignment="Right" DockPanel.Dock="Right" RenderTransformOrigin="0.5,0.5" Background="Transparent" Foreground="White" BorderBrush="{x:Null}">
                     <Button.Style>
                         <Style TargetType="Button">
-                            <Setter Property="Content" Value="{materialDesign:PackIcon WindowMinimize }" />
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <materialDesign:PackIcon Name="icon" Kind="WindowMinimize" Height="20" HorizontalAlignment="Center" Width="20" VerticalAlignment="Center" />
+                                </Setter.Value>
+                            </Setter>
                             <Setter Property="Cursor" Value="Hand"/>
-                            <Setter Property="FontSize" Value="30"/>
                         </Style>
                     </Button.Style>
                 </Button>
