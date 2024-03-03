@@ -27,6 +27,17 @@ namespace MessageTrack.BLL.Services
             return outboxMessagesDtos;
         }
 
+        public async Task UpdateOutboxMessage(OutboxMessageDto outboxMessageDto)
+        {
+            var message = _mapper.Map<OutboxMessage>(outboxMessageDto);
+            await _unitOfWork.OutboxMessageRepository.UpdateOutboxMessage(message);
+        }
+
+        public async Task DeleteOutboxMessageById(int id)
+        {
+            await _unitOfWork.OutboxMessageRepository.DeleteOutboxMessageById(id);
+        }
+
         public async Task CreateOutboxMessage(OutboxMessageDto outboxMessageDto)
         {
             outboxMessageDto.RegNumber = await GenerateRegNumber();

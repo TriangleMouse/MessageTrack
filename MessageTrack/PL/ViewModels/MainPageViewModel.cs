@@ -19,6 +19,7 @@ namespace MessageTrack.PL.ViewModels
     {
         private readonly IServiceProvider _provider;
         private readonly IMapper _mapper;
+        private readonly IBaseService _baseService;
         private readonly IOutboxMessageService _outboxMessageService;
         private readonly IExternalRecipientService _externalRecipientService;
         private string _searchText;
@@ -75,10 +76,11 @@ namespace MessageTrack.PL.ViewModels
         public ICommand EditCommand { get; private set; }
         public ICommand DeleteCommand { get; private set; }
 
-        public MainPageViewModel(IServiceProvider provider, IMapper mapper, IOutboxMessageService outboxMessageService, IExternalRecipientService externalRecipientService)
+        public MainPageViewModel(IServiceProvider provider, IMapper mapper, IBaseService baseService, IOutboxMessageService outboxMessageService, IExternalRecipientService externalRecipientService)
         {
             _mapper = mapper;
             _provider = provider;
+            _baseService = baseService;
             _outboxMessageService = outboxMessageService;
             _externalRecipientService = externalRecipientService;
 
@@ -140,12 +142,25 @@ namespace MessageTrack.PL.ViewModels
 
         private async Task Edit(OutboxMessageModel message)
         {
-            // Изменение сообщения асинхронно
+            var dataViewModel = _provider.GetRequiredService<DataViewModel>();
+            dataViewModel.Message = message;
+            dataViewModel.IsEditForm = true;
+            var dataPage = _provider.GetRequiredService<DataPage>();
+
+            var frame = Application.Current.MainWindow.FindName("MainFrame") as Frame;
+            if (frame != null)
+            {
+                dataPage.DataContext = dataViewModel;
+
+                frame.Navigate(dataPage);
+            }
         }
 
         private async Task Delete(OutboxMessageModel message)
         {
-            // Удаление сообщения асинхронно
+            await _outboxMessageService.DeleteOutboxMessageById(message.Id.Value);
+            _baseService.Commit();
+            Messages.Remove(message);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

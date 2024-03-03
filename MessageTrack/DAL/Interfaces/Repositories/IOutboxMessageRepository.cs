@@ -6,6 +6,8 @@ namespace MessageTrack.DAL.Interfaces.Repositories
     {
         Task<IEnumerable<OutboxMessage>> GetOutboxMessages();
         Task<int> CreateOutboxMessage(OutboxMessage message);
+        Task UpdateOutboxMessage(OutboxMessage message);
         Task<OutboxMessage> GetLastOutboxMessage();
+        Task DeleteOutboxMessageById(int id);
     }
 }

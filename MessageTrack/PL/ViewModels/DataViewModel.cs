@@ -3,13 +3,15 @@ using MessageTrack.PL.Models;
 using MessageTrack.PL.Pages;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using AutoMapper;
 using MessageTrack.BLL.Interfaces;
+using System.Windows.Controls;
 
 namespace MessageTrack.PL.ViewModels
 {
-    public class DataViewModel
+    public class DataViewModel : INotifyPropertyChanged
     {
         private readonly IMapper _mapper;
         private readonly IBaseService _baseService;
@@ -17,6 +19,7 @@ namespace MessageTrack.PL.ViewModels
         private readonly IOutboxMessageService _outboxMessageService;
 
         private bool _isEditForm = true;
+        private Visibility _editFormVisibility;
         private OutboxMessageModel _message;
 
 
@@ -36,13 +39,22 @@ namespace MessageTrack.PL.ViewModels
             set
             {
                 _isEditForm = value;
+                EditFormVisibility = value ? Visibility.Visible : Visibility.Collapsed;
+                OnPropertyChanged();
+            }
+        }
+       
+        public Visibility EditFormVisibility
+        {
+            get { return _editFormVisibility; }
+            set
+            {
+                _editFormVisibility = value;
                 OnPropertyChanged();
             }
         }
 
-        public ICommand ViewCommand { get; private set; }
         public ICommand SelectExternalRecipientCommand { get; private set; }
-        public ICommand EditCommand { get; private set; }
         public ICommand BackCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
@@ -59,13 +71,16 @@ namespace MessageTrack.PL.ViewModels
             CancelCommand = new RelayCommand(async () => await Cancel());
             SelectExternalRecipientCommand = new RelayCommand(async () => await SelectExternalRecipient());
             SaveCommand = new RelayCommand(async () => await Save());
-            ViewCommand = new RelayCommand(async () => await View());
-            EditCommand = new RelayCommand(async () => await Edit());
         }
 
         private async Task Back()
         {
+            var frame = Application.Current.MainWindow.FindName("MainFrame") as Frame;
 
+            if (frame != null && frame.CanGoBack)
+            {
+                frame.GoBack();
+            }
         }
 
         private async Task SelectExternalRecipient()
@@ -76,6 +91,13 @@ namespace MessageTrack.PL.ViewModels
 
         private async Task Cancel()
         {
+            if (!Message.Id.HasValue)
+            {
+                await Back();
+                return;
+            }
+
+            IsEditForm = false;
         }
 
         private async Task Save()
@@ -96,20 +118,18 @@ namespace MessageTrack.PL.ViewModels
             }
 
             var outboxMessage = _mapper.Map<OutboxMessageModel, OutboxMessageDto>(Message);
-            await _outboxMessageService.CreateOutboxMessage(outboxMessage);
+
+            if (outboxMessage.Id.HasValue)
+            {
+                await _outboxMessageService.UpdateOutboxMessage(outboxMessage);
+            }
+            else
+            {
+                await _outboxMessageService.CreateOutboxMessage(outboxMessage);
+            }
 
             _baseService.Commit();
-            IsEditForm = true;
-        }
-
-        private async Task View()
-        {
-
-        }
-
-        private async Task Edit()
-        {
-           
+            IsEditForm = false;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

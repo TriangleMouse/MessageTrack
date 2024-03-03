@@ -43,6 +43,8 @@ namespace MessageTrack
                 .AddScoped<MainPageViewModel>()
                 .AddTransient<DataPage>()
                 .AddTransient<DataViewModel>()
+                .AddTransient<SelectRecipientsModal>()
+                .AddTransient<SelectRecipientsViewModel>()
                 .BuildServiceProvider();
 
             // Resolve the MainWindow and set it as the application's main window

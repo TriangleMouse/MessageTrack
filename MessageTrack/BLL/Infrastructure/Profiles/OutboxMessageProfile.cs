@@ -2,11 +2,6 @@
 using MessageTrack.BLL.DTOs;
 using MessageTrack.DAL.Entities;
 using MessageTrack.PL.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MessageTrack.BLL.Infrastructure.Profiles
 {

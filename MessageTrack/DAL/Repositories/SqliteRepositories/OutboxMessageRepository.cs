@@ -46,5 +46,21 @@ namespace MessageTrack.DAL.Repositories.SqliteRepositories
 
             return default;
         }
+
+        public async Task DeleteOutboxMessageById(int id)
+        {
+            await SafeExecuteAsync(async () =>
+            {
+                await Connection.ExecuteAsync("delete from Outbox_Message where id = @id", new { id = id }, transaction: Transaction);
+            });
+        }
+
+        public async Task UpdateOutboxMessage(OutboxMessage message)
+        {
+            await SafeExecuteAsync(async () =>
+            {
+                await Connection.ExecuteAsync("update Outbox_Message set ExternalRecipientId = @ExternalRecipientId, Notes = @Notes where id = @id", new { ExternalRecipientId = message.ExternalRecipientId, Notes = message.Notes, id = message.Id }, transaction: Transaction);
+            });
+        }
     }
 }
