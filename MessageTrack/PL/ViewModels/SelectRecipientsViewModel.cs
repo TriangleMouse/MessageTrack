@@ -14,21 +14,46 @@ namespace MessageTrack.PL.ViewModels
         private readonly IExternalRecipientService _externalRecipientService;
         private ObservableCollection<ExternalRecipientDto> _externalRecipients;
 
-        public ICommand LoadDataCommand { get; set; }
+        public ObservableCollection<ExternalRecipientDto> ExternalRecipients
+        {
+            get => _externalRecipients;
+            set
+            {
+                _externalRecipients = value;
+                OnPropertyChanged();
+            }
+        }
 
+        public ExternalRecipientDto SelectedExternalRecipient { get; set; }
+
+        public ICommand CancelCommand { get; set; }
+        public ICommand ChooseCommand { get; set; }
+        public ICommand LoadDataCommand { get; set; }
+       
         public SelectRecipientsViewModel(IMapper mapper, IExternalRecipientService externalRecipientService)
         {
             _mapper = mapper;
             _externalRecipientService = externalRecipientService;
 
+            CancelCommand = new RelayCommand(() => CancelModal());
+            ChooseCommand = new RelayCommand(() => ChooseExternalRecipient());
             LoadDataCommand = new RelayCommand(async () => await LoadData());
         }
-
 
         public async Task LoadData()
         {
             IEnumerable<ExternalRecipientDto> externalRecipients = await _externalRecipientService.GetExternalRecipients();
-            _externalRecipients = new ObservableCollection<ExternalRecipientDto>(externalRecipients);
+            ExternalRecipients = new ObservableCollection<ExternalRecipientDto>(externalRecipients);
+        }
+
+        public void CancelModal()
+        {
+            DialogResult = false;
+        }
+
+        public void ChooseExternalRecipient()
+        {
+            DialogResult = true;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -37,5 +62,21 @@ namespace MessageTrack.PL.ViewModels
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        protected bool SetProperty<T>(ref T field, T newValue, [CallerMemberName] string propertyName = null)
+        {
+            if (!Equals(field, newValue))
+            {
+                field = newValue;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool? dialogResult;
+
+        public bool? DialogResult { get => dialogResult; set => SetProperty(ref dialogResult, value); }
     }
 }

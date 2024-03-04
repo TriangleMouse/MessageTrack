@@ -76,7 +76,6 @@
                     Width="702" 
                     Height="50"
                     Margin="0,0,0,0"
-                    VerticalAlignment="Top"
                     AcceptsReturn="True"
                     Style="{StaticResource MaterialDesignOutlinedTextBox}"
                     TextWrapping="NoWrap" 

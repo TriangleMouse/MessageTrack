@@ -5,37 +5,67 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:MessageTrack.PL.Pages"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="SelectRecipientsModal" 
-        Height="340"
-        Width="450"
+        Height="500"
+        Width="700"
         WindowStyle="None"
-        Cursor="Hand"
-        ResizeMode="CanResizeWithGrip"
-        AllowsTransparency="True" 
+        ResizeMode="NoResize"
+        AllowsTransparency="True"
+        Background="{DynamicResource MaterialDesignPaper}"
+        xmlns:xc="clr-namespace:MessageTrack.PL.Pages.Base" xmlns:viewmodels="clr-namespace:MessageTrack.PL.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SelectRecipientsViewModel}"
+        xc:DialogCloser.DialogResult="{Binding DialogResult}"
         >
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction Command="{Binding LoadDataCommand}" />
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
     <StackPanel Cursor="Hand">
-        <DockPanel Height="20" Background="#FF1534AF" DockPanel.Dock="Top" Cursor="Hand"  >
-            <Button x:Name="CloseButton" Cursor="Hand" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Width="22" Foreground="White" BorderBrush="{x:Null}" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalContentAlignment="Stretch">
+        <DockPanel x:Name="TopPanel" MouseDown="TopPanel_OnMouseDown" Height="30" Background="#FF1534AF" DockPanel.Dock="Top" Cursor="Hand"  >
+            <Button x:Name="CloseButton" Width="30" Command="{Binding CancelCommand}" DockPanel.Dock="Right" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Background="Transparent" Foreground="White" BorderBrush="{x:Null}">
                 <Button.Style>
                     <Style TargetType="Button">
-                        <Setter Property="Content" Value="{materialDesign:PackIcon Close }" />
+                        <Setter Property="Content">
+                            <Setter.Value>
+                                <materialDesign:PackIcon Name="icon" Kind="Close" Height="28" HorizontalAlignment="Center" Width="29" VerticalAlignment="Center" />
+                            </Setter.Value>
+                        </Setter>
                         <Setter Property="Cursor" Value="Hand"/>
                     </Style>
                 </Button.Style>
             </Button>
         </DockPanel>
-        <TextBox Text="{Binding SearchText}" Width="200" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4"  />
-        <ListView Height="211" Margin="15,15,15,15" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-        </ListView>
-        <DockPanel Margin="0,-2,20,0">
+        <TextBox Text="{Binding SearchText}" Width="298" HorizontalAlignment="Left" Height="25" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" Margin="15,10,0,-4">
+            <TextBox.Template>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Grid>
+                        <AdornerDecorator>
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="28,0,0,0"/>
+                        </AdornerDecorator>
+                        <TextBlock>
+                            <materialDesign:PackIcon Kind="Search" VerticalAlignment="Center" Foreground="#FF1534AF" Height="23" Width="18" Margin="5,0,0,0"/>
+                        </TextBlock>
+                        <Rectangle x:Name="underline" Height="1" VerticalAlignment="Bottom" Fill="#FF1534AF"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="underline" Property="Fill" Value="#FF223CA4"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </TextBox.Template>
+        </TextBox>
+        <ListView Height="360" ItemsSource="{Binding ExternalRecipients}" SelectedItem="{Binding SelectedExternalRecipient}" SelectionMode="Single" DisplayMemberPath="Name" Margin="15,15,15,15" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+        <DockPanel Margin="0,-2,15,0">
             <Button
-                Command="{Binding SaveCommand}"
+                Command="{Binding ChooseCommand}"
                 materialDesign:ButtonAssist.CornerRadius="5"
                 Style="{StaticResource MaterialDesignRaisedLightButton}"
-                ToolTip="Сохранить"
+                ToolTip="Выбрать"
                 Background="#FF1534AF" 
-                Content="Сохранить"
+                Content="Выбрать"
                 Height="36" 
                 Width="93" 
                 DockPanel.Dock="Right" 

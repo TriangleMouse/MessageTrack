@@ -8,12 +8,14 @@ using System.Windows.Input;
 using AutoMapper;
 using MessageTrack.BLL.Interfaces;
 using System.Windows.Controls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MessageTrack.PL.ViewModels
 {
     public class DataViewModel : INotifyPropertyChanged
     {
         private readonly IMapper _mapper;
+        private readonly IServiceProvider _serviceProvider;
         private readonly IBaseService _baseService;
         private readonly IExternalRecipientService _externalRecipientService;
         private readonly IOutboxMessageService _outboxMessageService;
@@ -59,8 +61,9 @@ namespace MessageTrack.PL.ViewModels
         public ICommand CancelCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
 
-        public DataViewModel(IMapper mapper, IBaseService baseService, IExternalRecipientService externalRecipientService, IOutboxMessageService outboxMessageService)
+        public DataViewModel(IServiceProvider provider, IMapper mapper, IBaseService baseService, IExternalRecipientService externalRecipientService, IOutboxMessageService outboxMessageService)
         {
+            _serviceProvider = provider;
             _mapper = mapper;
             _baseService = baseService;
             _externalRecipientService = externalRecipientService;
@@ -85,8 +88,16 @@ namespace MessageTrack.PL.ViewModels
 
         private async Task SelectExternalRecipient()
         {
-            SelectRecipientsModal selectRecipientsModal = new SelectRecipientsModal();
-            selectRecipientsModal.ShowDialog();
+            var selectRecipientsModal = _serviceProvider.GetRequiredService<SelectRecipientsModal>();
+            var result = selectRecipientsModal.ShowDialog();
+
+            if (result.Value && selectRecipientsModal.SelectRecipientsViewModel.SelectedExternalRecipient is ExternalRecipientDto)
+            {
+                Message.NameExternalRecipient =
+                    selectRecipientsModal.SelectRecipientsViewModel.SelectedExternalRecipient.Name;
+                Message.ExternalRecipientId = selectRecipientsModal.SelectRecipientsViewModel.SelectedExternalRecipient.Id;
+                OnPropertyChanged(nameof(Message));
+            }
         }
 
         private async Task Cancel()
