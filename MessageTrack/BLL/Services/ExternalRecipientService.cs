@@ -34,6 +34,23 @@ namespace MessageTrack.BLL.Services
             return isUnique;
         }
 
+        public async Task<int> GetExternalRecipientIdByName(string externalRecipientName)
+        {
+            var isUniqueExternalRecipient = await CheckUniqueExternalRecipient(externalRecipientName);
+
+            if (isUniqueExternalRecipient)
+            {
+                var newExternalRecipient = new ExternalRecipientDto(externalRecipientName);
+                var id = await CreateExternalRecipient(newExternalRecipient);
+
+                return id;
+            }
+
+            var externalRecipientDto = await GetExternalRecipientByName(externalRecipientName);
+
+            return externalRecipientDto.Id;
+        }
+
         public async Task<ExternalRecipientDto> GetExternalRecipientByName(string name)
         {
             var externalRecipient = await _unitOfWork.ExternalRecipientRepository.GetExternalRecipientByName(name);
@@ -43,12 +60,17 @@ namespace MessageTrack.BLL.Services
             return externalRecipientDto;
         }
 
-        public async Task<int?> CreateExternalRecipient(ExternalRecipientDto externalRecipientDto)
+        public async Task<int> CreateExternalRecipient(ExternalRecipientDto externalRecipientDto)
         {
             var externalRecipient = _mapper.Map<ExternalRecipient>(externalRecipientDto);
             var externalRecipientId = await _unitOfWork.ExternalRecipientRepository.CreateExternalRecipient(externalRecipient);
 
-            return externalRecipientId;
+            if (!externalRecipientId.HasValue)
+            {
+                throw new ArgumentNullException(nameof(externalRecipientId),"При создании получателя, возникла ошибка и не удалось получить его id.");
+            }
+
+            return externalRecipientId.Value;
         }
 
         public async Task<ExternalRecipientDto> GetExternalRecipientById(int id)

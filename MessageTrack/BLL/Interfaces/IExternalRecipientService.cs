@@ -7,8 +7,9 @@ namespace MessageTrack.BLL.Interfaces
     {
         Task<ExternalRecipientDto> GetExternalRecipientById(int id);
         Task<IEnumerable<ExternalRecipientDto>> GetExternalRecipients();
+        Task<int> GetExternalRecipientIdByName(string externalRecipientName);
 
-        Task<int?> CreateExternalRecipient(ExternalRecipientDto externalRecipientDto);
+        Task<int> CreateExternalRecipient(ExternalRecipientDto externalRecipientDto);
 
         Task<bool> CheckUniqueExternalRecipient(string name);
         Task<ExternalRecipientDto> GetExternalRecipientByName(string name);

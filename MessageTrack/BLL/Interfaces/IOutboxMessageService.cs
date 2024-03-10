@@ -4,9 +4,9 @@ namespace MessageTrack.BLL.Interfaces
 {
     public interface IOutboxMessageService
     {
-        Task CreateOutboxMessage(OutboxMessageDto outboxMessageDto);
+        Task SaveOutboxMessage(OutboxMessageDto outboxMessageDto);
+        Task<string> GenerateRegNumber();
         Task<IEnumerable<OutboxMessageDto>> GetOutboxMessages();
         Task DeleteOutboxMessageById(int id);
-        Task UpdateOutboxMessage(OutboxMessageDto outboxMessageDto);
     }
 }

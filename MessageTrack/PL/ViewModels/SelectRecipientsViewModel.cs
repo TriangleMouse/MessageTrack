@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MessageTrack.BLL.DTOs;
+﻿using MessageTrack.BLL.DTOs;
 using MessageTrack.BLL.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,7 +9,6 @@ namespace MessageTrack.PL.ViewModels
 {
     public class SelectRecipientsViewModel : INotifyPropertyChanged
     {
-        private readonly IMapper _mapper;
         private readonly IExternalRecipientService _externalRecipientService;
         private ObservableCollection<ExternalRecipientDto> _externalRecipients;
 
@@ -30,9 +28,8 @@ namespace MessageTrack.PL.ViewModels
         public ICommand ChooseCommand { get; set; }
         public ICommand LoadDataCommand { get; set; }
        
-        public SelectRecipientsViewModel(IMapper mapper, IExternalRecipientService externalRecipientService)
+        public SelectRecipientsViewModel(IExternalRecipientService externalRecipientService)
         {
-            _mapper = mapper;
             _externalRecipientService = externalRecipientService;
 
             CancelCommand = new RelayCommand(() => CancelModal());

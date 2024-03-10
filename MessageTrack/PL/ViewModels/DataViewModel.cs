@@ -1,14 +1,14 @@
-﻿using MessageTrack.BLL.DTOs;
+﻿using AutoMapper;
+using MessageTrack.BLL.DTOs;
+using MessageTrack.BLL.Interfaces;
 using MessageTrack.PL.Models;
 using MessageTrack.PL.Pages;
+using Microsoft.Extensions.DependencyInjection;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
-using AutoMapper;
-using MessageTrack.BLL.Interfaces;
 using System.Windows.Controls;
-using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Input;
 
 namespace MessageTrack.PL.ViewModels
 {
@@ -113,33 +113,28 @@ namespace MessageTrack.PL.ViewModels
 
         private async Task Save()
         {
-            var isUniqueExternalRecipient =
-                await _externalRecipientService.CheckUniqueExternalRecipient(Message.NameExternalRecipient);
+            string externalRecipientName = Message.NameExternalRecipient.Trim();
 
-            if (isUniqueExternalRecipient)
+            if (string.IsNullOrEmpty(externalRecipientName))
             {
-                var externalRecipientDto = new ExternalRecipientDto(Message.NameExternalRecipient);
-                Message.ExternalRecipientId = await _externalRecipientService.CreateExternalRecipient(externalRecipientDto);
-            }
-            else
-            {
-                var externalRecipientDto = await _externalRecipientService
-                    .GetExternalRecipientByName(Message.NameExternalRecipient);
-                Message.ExternalRecipientId = externalRecipientDto.Id;
+                MessageBox.Show("Поле \"Получатель\" не заполнено.","Ошибка!", MessageBoxButton.OK);
+                return;
             }
 
             var outboxMessage = _mapper.Map<OutboxMessageModel, OutboxMessageDto>(Message);
+            outboxMessage.ExternalRecipientId =
+                await _externalRecipientService.GetExternalRecipientIdByName(externalRecipientName);
 
-            if (outboxMessage.Id.HasValue)
-            {
-                await _outboxMessageService.UpdateOutboxMessage(outboxMessage);
-            }
-            else
-            {
-                await _outboxMessageService.CreateOutboxMessage(outboxMessage);
-            }
+            if (!outboxMessage.Id.HasValue)
+                outboxMessage.RegNumber = await _outboxMessageService.GenerateRegNumber();
 
+            await _outboxMessageService.SaveOutboxMessage(outboxMessage);
             _baseService.Commit();
+
+            var savedOutboxMessage = _mapper.Map<OutboxMessageDto, OutboxMessageModel>(outboxMessage);
+            savedOutboxMessage.NameExternalRecipient = externalRecipientName;
+
+            Message = savedOutboxMessage;
             IsEditForm = false;
         }
 

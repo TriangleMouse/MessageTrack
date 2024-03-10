@@ -27,6 +27,7 @@ namespace MessageTrack.DAL.Repositories.SqliteRepositories
         public async Task<int?> CreateExternalRecipient(ExternalRecipient externalRecipient)
         {
             int? id = default;
+
             await SafeExecuteAsync(async () =>
             {
                 id = await Connection.ExecuteScalarAsync<int?>("insert into External_Recipient (Name) values(@Name) RETURNING Id", new{ externalRecipient.Name }, transaction: Transaction);

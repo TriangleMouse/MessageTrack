@@ -27,33 +27,26 @@ namespace MessageTrack.BLL.Services
             return outboxMessagesDtos;
         }
 
-        public async Task UpdateOutboxMessage(OutboxMessageDto outboxMessageDto)
-        {
-            var message = _mapper.Map<OutboxMessage>(outboxMessageDto);
-            await _unitOfWork.OutboxMessageRepository.UpdateOutboxMessage(message);
-        }
-
         public async Task DeleteOutboxMessageById(int id)
         {
             await _unitOfWork.OutboxMessageRepository.DeleteOutboxMessageById(id);
         }
 
-        public async Task CreateOutboxMessage(OutboxMessageDto outboxMessageDto)
+        public async Task SaveOutboxMessage(OutboxMessageDto outboxMessageDto)
         {
-            outboxMessageDto.RegNumber = await GenerateRegNumber();
             var message = _mapper.Map<OutboxMessage>(outboxMessageDto);
-            await _unitOfWork.OutboxMessageRepository.CreateOutboxMessage(message);
+
+            if (message.Id == default)
+            {
+                outboxMessageDto.Id = await CreateOutboxMessage(message);
+            }
+            else
+            {
+                await UpdateOutboxMessage(message);
+            }
         }
 
-        private async Task<OutboxMessageDto> GetLastOutboxMessage()
-        {
-            var lastMessage = await _unitOfWork.OutboxMessageRepository.GetLastOutboxMessage();
-            var lastMessageDto = _mapper.Map<OutboxMessageDto>(lastMessage);
-
-            return lastMessageDto;
-        }
-
-        private async Task<string> GenerateRegNumber()
+        public async Task<string> GenerateRegNumber()
         {
             var regexPattern = "\\s*(?<Day>\\d*)-(?<Month>\\d*)/(?<UniqueNumberOnMonth>\\d*)";
             int uniqueNumberOnMonth = 1;
@@ -68,10 +61,35 @@ namespace MessageTrack.BLL.Services
                 if (DateTime.Now.Month <= lastMessage.DateCreated.Month)
                     uniqueNumberOnMonth = ++lastMessageUniqueNumber;
             }
-            
+
             string regNumber = $"{DateTime.Now.Day}-{DateTime.Now.Month}/{uniqueNumberOnMonth}";
 
             return regNumber;
+        }
+
+        private async Task UpdateOutboxMessage(OutboxMessage message)
+        {
+            await _unitOfWork.OutboxMessageRepository.UpdateOutboxMessage(message);
+        }
+
+        private async Task<int> CreateOutboxMessage(OutboxMessage message)
+        {
+            var id = await _unitOfWork.OutboxMessageRepository.CreateOutboxMessage(message);
+
+            if (!id.HasValue)
+            {
+                throw new ArgumentNullException(nameof(id), "При сохранении сообщения возникла ошибка. Не удалось получить id пакета");
+            }
+
+            return id.Value;
+        }
+
+        private async Task<OutboxMessageDto> GetLastOutboxMessage()
+        {
+            var lastMessage = await _unitOfWork.OutboxMessageRepository.GetLastOutboxMessage();
+            var lastMessageDto = _mapper.Map<OutboxMessageDto>(lastMessage);
+
+            return lastMessageDto;
         }
     }
 }

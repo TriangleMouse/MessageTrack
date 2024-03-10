@@ -37,14 +37,16 @@ namespace MessageTrack.DAL.Repositories.SqliteRepositories
             return message;
         }
 
-        public async Task<int> CreateOutboxMessage(OutboxMessage message)
+        public async Task<int?> CreateOutboxMessage(OutboxMessage message)
         {
+            int? id = default;
+
             await SafeExecuteAsync(async () =>
-            { 
-                await Connection.ExecuteAsync("insert into Outbox_Message (DateCreated, RegNumber, ExternalRecipientId, Notes) values(@DateCreated,  @RegNumber, @ExternalRecipientId, @Notes) ", new { DateCreated = message.DateCreated, RegNumber = message.RegNumber, ExternalRecipientId = message.ExternalRecipientId, Notes = message.Notes }, transaction: Transaction);
+            {
+                id = await Connection.ExecuteScalarAsync<int?>("insert into Outbox_Message (DateCreated, RegNumber, ExternalRecipientId, Notes) values(@DateCreated,  @RegNumber, @ExternalRecipientId, @Notes) RETURNING Id", new { DateCreated = message.DateCreated, RegNumber = message.RegNumber, ExternalRecipientId = message.ExternalRecipientId, Notes = message.Notes }, transaction: Transaction);
             });
 
-            return default;
+            return id;
         }
 
         public async Task DeleteOutboxMessageById(int id)
