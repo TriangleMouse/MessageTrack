@@ -116,7 +116,8 @@ namespace MessageTrack.PL.ViewModels
             string externalRecipientName = Message.NameExternalRecipient.Trim();
 
             if (string.IsNullOrEmpty(externalRecipientName))
-            {
+            {   
+                //todo в ресурсы вынести
                 MessageBox.Show("Поле \"Получатель\" не заполнено.","Ошибка!", MessageBoxButton.OK);
                 return;
             }

@@ -67,6 +67,7 @@ namespace MessageTrack.BLL.Services
 
             if (!externalRecipientId.HasValue)
             {
+                //todo в ресурсы вынести
                 throw new ArgumentNullException(nameof(externalRecipientId),"При создании получателя, возникла ошибка и не удалось получить его id.");
             }
 

@@ -78,6 +78,7 @@ namespace MessageTrack.BLL.Services
 
             if (!id.HasValue)
             {
+                //todo в ресурсы вынести
                 throw new ArgumentNullException(nameof(id), "При сохранении сообщения возникла ошибка. Не удалось получить id пакета");
             }
 
