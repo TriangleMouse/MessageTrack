@@ -3,6 +3,7 @@ using MessageTrack.BLL.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace MessageTrack.PL.ViewModels
@@ -10,6 +11,8 @@ namespace MessageTrack.PL.ViewModels
     public class SelectRecipientsViewModel : INotifyPropertyChanged
     {
         private readonly IExternalRecipientService _externalRecipientService;
+
+        private string _searchText;
         private ObservableCollection<ExternalRecipientDto> _externalRecipients;
 
         public ObservableCollection<ExternalRecipientDto> ExternalRecipients
@@ -21,6 +24,29 @@ namespace MessageTrack.PL.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        private ICollectionView _view;
+
+        public ICollectionView View
+        {
+            get => _view;
+            set
+            {
+                _view = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string SearchText
+        {
+            get => _searchText;
+            set
+            {
+                _searchText = value;
+                View.Refresh();
+            }
+        }
+
 
         public ExternalRecipientDto SelectedExternalRecipient { get; set; }
 
@@ -37,10 +63,21 @@ namespace MessageTrack.PL.ViewModels
             LoadDataCommand = new RelayCommand(async () => await LoadData());
         }
 
+        private bool FilterRecipients(object obj)
+        {
+            if (obj is ExternalRecipientDto recipient)
+            {
+                return string.IsNullOrWhiteSpace(_searchText) || recipient.Name.ToLower().Contains(_searchText.ToLower());
+            }
+            return false;
+        }
+
         public async Task LoadData()
         {
             IEnumerable<ExternalRecipientDto> externalRecipients = await _externalRecipientService.GetExternalRecipients();
             ExternalRecipients = new ObservableCollection<ExternalRecipientDto>(externalRecipients);
+            View = CollectionViewSource.GetDefaultView(ExternalRecipients);
+            View.Filter = FilterRecipients;
         }
 
         public void CancelModal()

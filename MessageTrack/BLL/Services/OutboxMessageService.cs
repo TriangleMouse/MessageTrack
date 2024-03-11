@@ -48,7 +48,7 @@ namespace MessageTrack.BLL.Services
 
         public async Task<string> GenerateRegNumber()
         {
-            var regexPattern = "\\s*(?<Day>\\d*)-(?<Month>\\d*)/(?<UniqueNumberOnMonth>\\d*)";
+            var regexPattern = "\\s*(?<UniqueNumberOnMonth>\\d*)-(?<Day>\\d*)/(?<Month>\\d*)";
             int uniqueNumberOnMonth = 1;
 
             var lastMessage = await GetLastOutboxMessage();
@@ -61,8 +61,7 @@ namespace MessageTrack.BLL.Services
                 if (DateTime.Now.Month <= lastMessage.DateCreated.Month)
                     uniqueNumberOnMonth = ++lastMessageUniqueNumber;
             }
-
-            string regNumber = $"{DateTime.Now.Day}-{DateTime.Now.Month}/{uniqueNumberOnMonth}";
+            string regNumber = $"{uniqueNumberOnMonth}-{DateTime.Now.Day.ToString("00")}/{DateTime.Now.Month.ToString("00")}";
 
             return regNumber;
         }

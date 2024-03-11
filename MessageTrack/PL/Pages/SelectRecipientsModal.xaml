@@ -37,7 +37,7 @@
                 </Button.Style>
             </Button>
         </DockPanel>
-        <TextBox Text="{Binding SearchText}" Width="298" HorizontalAlignment="Left" Height="25" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" Margin="15,10,0,-4">
+        <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="298" HorizontalAlignment="Left" Height="25" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" Margin="15,10,0,-4" FontSize="14">
             <TextBox.Template>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Grid>

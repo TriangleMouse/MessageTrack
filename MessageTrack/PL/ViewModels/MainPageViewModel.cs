@@ -12,6 +12,8 @@ using System.Windows.Input;
 using System.Linq;
 using AutoMapper;
 using MessageTrack.BLL.DTOs;
+using MessageTrack.DAL.Entities;
+using System.Windows.Data;
 
 namespace MessageTrack.PL.ViewModels
 {
@@ -27,14 +29,25 @@ namespace MessageTrack.PL.ViewModels
         private int _selectedMonth;
         private ObservableCollection<OutboxMessageModel> _messages;
 
+        private ICollectionView _messagesView;
+
+        public ICollectionView MessagesView
+        {
+            get => _messagesView;
+            set
+            {
+                _messagesView = value;
+                OnPropertyChanged();
+            }
+        }
+
         public string SearchText
         {
             get => _searchText;
             set
             {
                 _searchText = value;
-                OnPropertyChanged();
-                FilterMessages();
+                MessagesView.Refresh();
             }
         }
 
@@ -45,7 +58,7 @@ namespace MessageTrack.PL.ViewModels
             {
                 _selectedYear = value;
                 OnPropertyChanged();
-                FilterMessages();
+                //FilterMessages();
             }
         }
 
@@ -56,7 +69,7 @@ namespace MessageTrack.PL.ViewModels
             {
                 _selectedMonth = value;
                 OnPropertyChanged();
-                FilterMessages();
+                //FilterMessages();
             }
         }
 
@@ -104,12 +117,20 @@ namespace MessageTrack.PL.ViewModels
             }
 
             Messages = new ObservableCollection<OutboxMessageModel>(messages);
+            MessagesView = CollectionViewSource.GetDefaultView(Messages);
+            MessagesView.Filter = FilterMessages;
         }
 
-        private async Task FilterMessages()
+        private bool FilterMessages(object obj)
         {
-            // Выполните фильтрацию сообщений асинхронно
-            //Messages = new ObservableCollection<OutboxMessageDto>(await service.FilterMessagesAsync(SearchText, SelectedYear, SelectedMonth));
+            if (obj is OutboxMessageModel message)
+                return string.IsNullOrWhiteSpace(_searchText) 
+                       || message.NameExternalRecipient.ToLower().Contains(_searchText.ToLower()) 
+                       || message.RegNumber.ToLower().Contains(_searchText.ToLower()) 
+                       || message.DateCreated.ToLower().Contains(_searchText.ToLower()) 
+                       || message.Notes.ToLower().Contains(_searchText.ToLower());
+            
+            return false;
         }
 
         private async Task Add()

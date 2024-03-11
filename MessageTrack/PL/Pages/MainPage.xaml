@@ -20,7 +20,27 @@
     </b:Interaction.Triggers>
     <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <DockPanel>
-            <TextBox Text="{Binding SearchText}" Width="200" HorizontalAlignment="Left" Height="25" Margin="10,10,0,0" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4"  />
+            <TextBox Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="200" HorizontalAlignment="Left" Height="25" CaretBrush="#FF1534AF" SelectionBrush="#FF223CA4" Background="#00000000" BorderBrush="#FF223CA4" Margin="15,10,0,-4" FontSize="14">
+                <TextBox.Template>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Grid>
+                            <AdornerDecorator>
+                                <ScrollViewer x:Name="PART_ContentHost" Margin="28,0,0,0"/>
+                            </AdornerDecorator>
+                            <TextBlock>
+                                <materialDesign:PackIcon Kind="Search" VerticalAlignment="Center" Foreground="#FF1534AF" Height="23" Width="18" Margin="5,0,0,0"/>
+                            </TextBlock>
+                            <Rectangle x:Name="underline" Height="1" VerticalAlignment="Bottom" Fill="#FF1534AF"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="underline" Property="Fill" Value="#FF223CA4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </TextBox.Template>
+            </TextBox>
+
             <ComboBox SelectedItem="{Binding SelectedYear}" ItemsSource="{Binding Years}" Width="150" Height="25" HorizontalAlignment="Left" Margin="10,10,0,0" Background="#00000000" BorderBrush="#FF223CA4" />
             <ComboBox SelectedItem="{Binding SelectedMonth}" ItemsSource="{Binding Months}" Width="150" Height="25" HorizontalAlignment="Left" Margin="10,10,0,0" BorderBrush="#FF223CA4" />
             <Button
