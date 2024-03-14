@@ -1,5 +1,6 @@
-﻿using MessageTrack.BLL.Interfaces;
-using MessageTrack.BLL.Services;
+﻿using AutoMapper;
+using MessageTrack.BLL.DTOs;
+using MessageTrack.BLL.Interfaces;
 using MessageTrack.PL.Models;
 using MessageTrack.PL.Pages;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,12 +9,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Linq;
-using AutoMapper;
-using MessageTrack.BLL.DTOs;
-using MessageTrack.DAL.Entities;
 using System.Windows.Data;
+using System.Windows.Input;
 
 namespace MessageTrack.PL.ViewModels
 {
@@ -25,11 +22,13 @@ namespace MessageTrack.PL.ViewModels
         private readonly IOutboxMessageService _outboxMessageService;
         private readonly IExternalRecipientService _externalRecipientService;
         private string _searchText;
-        private int _selectedYear;
-        private int _selectedMonth;
+        private string _selectedYear;
+        private string _selectedMonth;
         private ObservableCollection<OutboxMessageModel> _messages;
 
         private ICollectionView _messagesView;
+        private IEnumerable<string> _years;
+        private IEnumerable<string> _months;
 
         public ICollectionView MessagesView
         {
@@ -37,6 +36,26 @@ namespace MessageTrack.PL.ViewModels
             set
             {
                 _messagesView = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<string> Years
+        {
+            get => _years;
+            set
+            {
+                _years = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public IEnumerable<string> Months
+        {
+            get => _months;
+            set
+            {
+                _months = value;
                 OnPropertyChanged();
             }
         }
@@ -51,25 +70,23 @@ namespace MessageTrack.PL.ViewModels
             }
         }
 
-        public int SelectedYear
+        public string SelectedYear
         {
             get => _selectedYear;
             set
             {
                 _selectedYear = value;
-                OnPropertyChanged();
-                //FilterMessages();
+                MessagesView.Refresh();
             }
         }
 
-        public int SelectedMonth
+        public string SelectedMonth
         {
             get => _selectedMonth;
             set
             {
                 _selectedMonth = value;
-                OnPropertyChanged();
-                //FilterMessages();
+                MessagesView.Refresh();
             }
         }
 
@@ -119,23 +136,45 @@ namespace MessageTrack.PL.ViewModels
             Messages = new ObservableCollection<OutboxMessageModel>(messages);
             MessagesView = CollectionViewSource.GetDefaultView(Messages);
             MessagesView.Filter = FilterMessages;
+            Years = FillYearsFilter(messagesDto);
+            Months = FillMonthsFilter();
+        }
+
+        private List<string> FillMonthsFilter() => new(13) { "Все" , "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль","Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
+
+        private List<string> FillYearsFilter(IEnumerable<OutboxMessageDto> messagesDto)
+        {
+            var years = new List<string>() { "Все" };
+            years.AddRange(messagesDto.Select(message => message.DateCreated.Year.ToString()).Distinct().OrderBy(x => x));
+
+            return years;
         }
 
         private bool FilterMessages(object obj)
         {
-            if (obj is OutboxMessageModel message)
-                return string.IsNullOrWhiteSpace(_searchText) 
-                       || message.NameExternalRecipient.ToLower().Contains(_searchText.ToLower()) 
-                       || message.RegNumber.ToLower().Contains(_searchText.ToLower()) 
-                       || message.DateCreated.ToLower().Contains(_searchText.ToLower()) 
-                       || message.Notes.ToLower().Contains(_searchText.ToLower());
-            
-            return false;
+            if (obj is not OutboxMessageModel message)
+                return false;
+
+            bool isSearchTextEmpty = string.IsNullOrWhiteSpace(SearchText);
+            bool containsSearchText = ContainsSearchText(message.NameExternalRecipient) ||
+                                      ContainsSearchText(message.RegNumber) ||
+                                      ContainsSearchText(message.DateCreated) ||
+                                      ContainsSearchText(message.Notes);
+
+            bool containsSelectedYear = string.IsNullOrWhiteSpace(SearchText) && string.Equals(SelectedYear, "Все") || 
+                                        message.DateCreated.Contains(SelectedYear, StringComparison.OrdinalIgnoreCase);
+            bool containsSelectedMonth = string.IsNullOrWhiteSpace(SelectedMonth) && string.Equals(SelectedMonth, "Все") || 
+                                          message.DateCreated.Contains(SelectedMonth, StringComparison.OrdinalIgnoreCase);
+
+            return (isSearchTextEmpty || containsSearchText) && containsSelectedYear && containsSelectedMonth;
+        }
+        private bool ContainsSearchText(string field)
+        {
+            return field.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
         }
 
         private async Task Add()
         {
-            // Откройте новую страницу для добавления записи асинхронно
             var frame = Application.Current.MainWindow.FindName("MainFrame") as Frame;
             if (frame != null)
             {

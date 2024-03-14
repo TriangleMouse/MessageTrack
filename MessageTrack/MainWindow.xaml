@@ -20,7 +20,10 @@
         TextOptions.TextFormattingMode="Ideal"
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}" Cursor="">
+        FontFamily="{DynamicResource MaterialDesignFont}" Cursor="" BorderBrush="#FF1534AF" BorderThickness="0.4,0.4,0.4,0.4"
+        
+        >
+
     <Window.Resources>
         <Style TargetType="{x:Type Border}">
             <Setter Property="CornerRadius" Value="15"/>
@@ -73,7 +76,7 @@
                 </Button>
             </DockPanel>
 
-            <Frame x:Name="MainFrame" Grid.Row="1" Grid.Column="1" NavigationUIVisibility="Hidden" />
+            <Frame x:Name="MainFrame" Grid.Row="1" Grid.Column="1" NavigationUIVisibility="Hidden"/>
 
             <DockPanel Grid.Row="2" Grid.ColumnSpan="2" Height="30">
                 <Button x:Name="ReloadButton"  Width="30" DockPanel.Dock="Right" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Background="{x:Null}" Foreground="#FF1534AF" BorderBrush="{x:Null}">
@@ -85,6 +88,7 @@
                     </Button.Style>
                 </Button>
             </DockPanel>
+            <Label Grid.Column="1" Content="Система учета писем v1.0" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#DDFFFFFF" RenderTransformOrigin="-0.514,-1.339" FontSize="16"/>
         </Grid>
 
     </Border>

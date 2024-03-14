@@ -15,7 +15,7 @@
         AllowsTransparency="True"
         Background="{DynamicResource MaterialDesignPaper}"
         xmlns:xc="clr-namespace:MessageTrack.PL.Pages.Base" xmlns:viewmodels="clr-namespace:MessageTrack.PL.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:SelectRecipientsViewModel}"
-        xc:DialogCloser.DialogResult="{Binding DialogResult}"
+        xc:DialogCloser.DialogResult="{Binding DialogResult}" BorderBrush="#FF1534AF" Cursor="" BorderThickness="0.4,0.4,0.4,0.4"
         >
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
@@ -24,6 +24,7 @@
     </b:Interaction.Triggers>
     <StackPanel Cursor="Hand">
         <DockPanel x:Name="TopPanel" MouseDown="TopPanel_OnMouseDown" Height="30" Background="#FF1534AF" DockPanel.Dock="Top" Cursor="Hand"  >
+            <Label Content="Выбрать получателя" HorizontalAlignment="Left"  VerticalAlignment="Center" Foreground="#DDFFFFFF" FontSize="16" HorizontalContentAlignment="Center" Margin="15,0,0,0"/>
             <Button x:Name="CloseButton" Width="30" Command="{Binding CancelCommand}" DockPanel.Dock="Right" HorizontalAlignment="Right" RenderTransformOrigin="0.5,0.5" Background="Transparent" Foreground="White" BorderBrush="{x:Null}">
                 <Button.Style>
                     <Style TargetType="Button">
@@ -57,7 +58,7 @@
                 </ControlTemplate>
             </TextBox.Template>
         </TextBox>
-        <ListView Height="360" ItemsSource="{Binding ExternalRecipients}" SelectedItem="{Binding SelectedExternalRecipient}" SelectionMode="Single" DisplayMemberPath="Name" Margin="15,15,15,15" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+        <ListView Height="360" ItemsSource="{Binding ExternalRecipients}" SelectedItem="{Binding SelectedExternalRecipient}" SelectionMode="Single" DisplayMemberPath="Name" Margin="15,15,15,15" ScrollViewer.CanContentScroll="True" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" SelectedIndex="2" BorderBrush="#898A8888" BorderThickness="1,0.5,1,1"/>
         <DockPanel Margin="0,-2,15,0">
             <Button
                 Command="{Binding ChooseCommand}"

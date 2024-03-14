@@ -7,7 +7,9 @@
       xmlns:local="clr-namespace:MessageTrack.PL.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="800"
-      Title="DataPage" Background="White">
+      Title="DataPage"
+      Background="{DynamicResource MaterialDesignPaper}" Cursor="Hand"
+      >
         <StackPanel>
             <DockPanel>
                 <Button
@@ -29,8 +31,28 @@
                             <Setter Property="Cursor" Value="Hand"/>
                         </Style>
                     </Button.Style>
-            </Button>
-            </DockPanel>
+                </Button>
+                <Button
+                    Command="{Binding EditCommand}"
+                    ToolTip="Назад"
+                    Width="30"
+                    Margin="0,10,20,0"
+                    HorizontalAlignment="Right"
+                    Height="30"
+                    Foreground="#FF1534AF"
+                    BorderBrush="White" Background="{x:Null}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignIconButton}">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                <materialDesign:PackIcon Name="icon" Kind="PencilOutline" Height="28" HorizontalAlignment="Center" Width="29" VerticalAlignment="Center" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Cursor" Value="Hand"/>
+                        </Style>
+                    </Button.Style>
+                </Button>
+        </DockPanel>
         <DockPanel Margin="0,10,0,0">
             <TextBox
                 Text="{Binding Message.RegNumber, Mode=TwoWay}"

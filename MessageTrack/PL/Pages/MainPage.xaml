@@ -41,8 +41,8 @@
                 </TextBox.Template>
             </TextBox>
 
-            <ComboBox SelectedItem="{Binding SelectedYear}" ItemsSource="{Binding Years}" Width="150" Height="25" HorizontalAlignment="Left" Margin="10,10,0,0" Background="#00000000" BorderBrush="#FF223CA4" />
-            <ComboBox SelectedItem="{Binding SelectedMonth}" ItemsSource="{Binding Months}" Width="150" Height="25" HorizontalAlignment="Left" Margin="10,10,0,0" BorderBrush="#FF223CA4" />
+            <ComboBox SelectedItem="{Binding SelectedYear}" ItemsSource="{Binding Years}" Width="150" Height="25" HorizontalAlignment="Left" Margin="10,10,0,0" Background="#00000000" BorderBrush="#FF223CA4" SelectedIndex="0" />
+            <ComboBox SelectedItem="{Binding SelectedMonth}" ItemsSource="{Binding Months}" Width="150" Height="25" HorizontalAlignment="Left" Margin="10,10,0,0" BorderBrush="#FF223CA4" SelectedIndex="0" />
             <Button
                 Command="{Binding AddCommand}"
                 Style="{StaticResource MaterialDesignIconButton}"

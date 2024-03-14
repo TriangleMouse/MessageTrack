@@ -57,6 +57,7 @@ namespace MessageTrack.PL.ViewModels
         }
 
         public ICommand SelectExternalRecipientCommand { get; private set; }
+        public ICommand EditCommand { get; private set; }
         public ICommand BackCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
         public ICommand SaveCommand { get; private set; }
@@ -70,10 +71,16 @@ namespace MessageTrack.PL.ViewModels
             _outboxMessageService = outboxMessageService;
 
             Message = new OutboxMessageModel();
+            EditCommand = new RelayCommand(() => Edit());
             BackCommand = new RelayCommand(async () => await Back());
             CancelCommand = new RelayCommand(async () => await Cancel());
             SelectExternalRecipientCommand = new RelayCommand(async () => await SelectExternalRecipient());
             SaveCommand = new RelayCommand(async () => await Save());
+        }
+
+        private void Edit()
+        {
+            IsEditForm = !IsEditForm;
         }
 
         private async Task Back()

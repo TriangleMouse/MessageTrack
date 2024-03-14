@@ -63,14 +63,13 @@ namespace MessageTrack.PL.ViewModels
             LoadDataCommand = new RelayCommand(async () => await LoadData());
         }
 
-        private bool FilterRecipients(object obj)
-        {
-            if (obj is ExternalRecipientDto recipient)
-            {
-                return string.IsNullOrWhiteSpace(_searchText) || recipient.Name.ToLower().Contains(_searchText.ToLower());
-            }
-            return false;
-        }
+        private bool FilterRecipients(object obj) => 
+            obj is ExternalRecipientDto recipient && 
+                (
+                string.IsNullOrWhiteSpace(_searchText) || 
+                recipient.Name.Contains(_searchText, StringComparison.OrdinalIgnoreCase)
+                );
+    
 
         public async Task LoadData()
         {
