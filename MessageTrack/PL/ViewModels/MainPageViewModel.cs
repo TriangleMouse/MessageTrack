@@ -156,14 +156,15 @@ namespace MessageTrack.PL.ViewModels
                 return false;
 
             bool isSearchTextEmpty = string.IsNullOrWhiteSpace(SearchText);
-            bool containsSearchText = ContainsSearchText(message.NameExternalRecipient) ||
+            bool containsSearchText = !isSearchTextEmpty && 
+                                      (ContainsSearchText(message.NameExternalRecipient) ||
                                       ContainsSearchText(message.RegNumber) ||
                                       ContainsSearchText(message.DateCreated) ||
-                                      ContainsSearchText(message.Notes);
+                                      ContainsSearchText(message.Notes));
 
-            bool containsSelectedYear = string.IsNullOrWhiteSpace(SearchText) && string.Equals(SelectedYear, "Все") || 
+            bool containsSelectedYear = string.IsNullOrWhiteSpace(SelectedYear) || string.Equals(SelectedYear, "Все") || 
                                         message.DateCreated.Contains(SelectedYear, StringComparison.OrdinalIgnoreCase);
-            bool containsSelectedMonth = string.IsNullOrWhiteSpace(SelectedMonth) && string.Equals(SelectedMonth, "Все") || 
+            bool containsSelectedMonth = string.IsNullOrWhiteSpace(SelectedMonth) || string.Equals(SelectedMonth, "Все") || 
                                           message.DateCreated.Contains(SelectedMonth, StringComparison.OrdinalIgnoreCase);
 
             return (isSearchTextEmpty || containsSearchText) && containsSelectedYear && containsSelectedMonth;
