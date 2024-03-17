@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using MessageTrack.PL.ViewModels.Memento;
 
 namespace MessageTrack.PL.ViewModels
 {
@@ -24,12 +25,16 @@ namespace MessageTrack.PL.ViewModels
         private Visibility _editFormVisibility;
         private OutboxMessageModel _message;
 
+        private OutboxMessageModelMemento MessageMemento { get; set; }
 
         public OutboxMessageModel Message
         {
             get => _message;
             set
             {
+                //if (_message == default)
+                //    SaveState(value);
+
                 _message = value;
                 OnPropertyChanged();
             }
@@ -40,6 +45,11 @@ namespace MessageTrack.PL.ViewModels
             get => _isEditForm;
             set
             {
+                if (Message != default && value)
+                    SaveState(Message);
+                else if (Message != default && !value)
+                    RestoreState();
+
                 _isEditForm = value;
                 EditFormVisibility = value ? Visibility.Visible : Visibility.Collapsed;
                 OnPropertyChanged();
@@ -107,6 +117,20 @@ namespace MessageTrack.PL.ViewModels
             }
         }
 
+        private void SaveState(OutboxMessageModel state)
+        {
+            MessageMemento = new OutboxMessageModelMemento(state);
+        }
+
+        private void RestoreState()
+        {
+            if (MessageMemento != null)
+            {
+                Message = MessageMemento.State;
+                MessageMemento = null;
+            }
+        }
+
         private async Task Cancel()
         {
             if (!Message.Id.HasValue)
@@ -115,6 +139,7 @@ namespace MessageTrack.PL.ViewModels
                 return;
             }
 
+            RestoreState();
             IsEditForm = false;
         }
 
@@ -142,6 +167,7 @@ namespace MessageTrack.PL.ViewModels
             var savedOutboxMessage = _mapper.Map<OutboxMessageDto, OutboxMessageModel>(outboxMessage);
             savedOutboxMessage.NameExternalRecipient = externalRecipientName;
 
+            SaveState(savedOutboxMessage);
             Message = savedOutboxMessage;
             IsEditForm = false;
         }
