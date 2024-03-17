@@ -32,9 +32,6 @@ namespace MessageTrack.PL.ViewModels
             get => _message;
             set
             {
-                //if (_message == default)
-                //    SaveState(value);
-
                 _message = value;
                 OnPropertyChanged();
             }
@@ -81,14 +78,14 @@ namespace MessageTrack.PL.ViewModels
             _outboxMessageService = outboxMessageService;
 
             Message = new OutboxMessageModel();
-            EditCommand = new RelayCommand(() => Edit());
+            EditCommand = new RelayCommand(async () => await Edit());
             BackCommand = new RelayCommand(async () => await Back());
             CancelCommand = new RelayCommand(async () => await Cancel());
             SelectExternalRecipientCommand = new RelayCommand(async () => await SelectExternalRecipient());
             SaveCommand = new RelayCommand(async () => await Save());
         }
 
-        private void Edit()
+        private async Task Edit()
         {
             IsEditForm = !IsEditForm;
         }

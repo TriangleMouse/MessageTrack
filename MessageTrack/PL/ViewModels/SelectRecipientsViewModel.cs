@@ -3,6 +3,7 @@ using MessageTrack.BLL.Interfaces;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -10,7 +11,9 @@ namespace MessageTrack.PL.ViewModels
 {
     public class SelectRecipientsViewModel : INotifyPropertyChanged
     {
+        private readonly IBaseService _baseService;
         private readonly IExternalRecipientService _externalRecipientService;
+        private readonly IOutboxMessageService _outboxMessageService;
 
         private string _searchText;
         private ObservableCollection<ExternalRecipientDto> _externalRecipients;
@@ -53,14 +56,18 @@ namespace MessageTrack.PL.ViewModels
         public ICommand CancelCommand { get; set; }
         public ICommand ChooseCommand { get; set; }
         public ICommand LoadDataCommand { get; set; }
-       
-        public SelectRecipientsViewModel(IExternalRecipientService externalRecipientService)
-        {
-            _externalRecipientService = externalRecipientService;
+        public ICommand DeleteCommand { get; private set; }
 
-            CancelCommand = new RelayCommand(() => CancelModal());
-            ChooseCommand = new RelayCommand(() => ChooseExternalRecipient());
+        public SelectRecipientsViewModel(IBaseService baseService, IExternalRecipientService externalRecipientService, IOutboxMessageService outboxMessageService)
+        {
+            _baseService = baseService;
+            _externalRecipientService = externalRecipientService;
+            _outboxMessageService = outboxMessageService;
+
+            CancelCommand = new RelayCommand(async () => await CancelModal());
+            ChooseCommand = new RelayCommand(async () => await ChooseExternalRecipient());
             LoadDataCommand = new RelayCommand(async () => await LoadData());
+            DeleteCommand = new RelayCommand<ExternalRecipientDto>(async (externalRecipient) => await Delete(externalRecipient));
         }
 
         private bool FilterRecipients(object obj) => 
@@ -71,7 +78,7 @@ namespace MessageTrack.PL.ViewModels
                 );
     
 
-        public async Task LoadData()
+        private async Task LoadData()
         {
             IEnumerable<ExternalRecipientDto> externalRecipients = await _externalRecipientService.GetExternalRecipients();
             ExternalRecipients = new ObservableCollection<ExternalRecipientDto>(externalRecipients);
@@ -79,14 +86,35 @@ namespace MessageTrack.PL.ViewModels
             View.Filter = FilterRecipients;
         }
 
-        public void CancelModal()
+        private async Task CancelModal()
         {
             DialogResult = false;
         }
 
-        public void ChooseExternalRecipient()
+        private async Task ChooseExternalRecipient()
         {
             DialogResult = true;
+        }
+
+        private async Task Delete(ExternalRecipientDto externalRecipient)
+        {
+            if (MessageBox.Show("Вы уверены, что хотите удалить выбранную запись?", "Внимание!", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+
+            var messages = await _outboxMessageService.GetAllMessagesByExternalRecipientId(externalRecipient.Id);
+            var regNumbers = messages.Select(message => message.RegNumber);
+
+            if (messages.Any())
+            {
+                var errorText = string.Format("Данного получателя невозможно удалить, так как он выбран в следующих карточках: {0}", string.Join(',', regNumbers));
+
+                MessageBox.Show(errorText);
+                return;
+            }
+
+            await _externalRecipientService.DeleteExternalRecipientById(externalRecipient.Id);
+            _baseService.Commit();
+            ExternalRecipients.Remove(externalRecipient);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

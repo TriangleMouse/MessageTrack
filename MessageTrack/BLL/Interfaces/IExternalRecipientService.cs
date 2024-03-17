@@ -13,5 +13,6 @@ namespace MessageTrack.BLL.Interfaces
 
         Task<bool> CheckUniqueExternalRecipient(string name);
         Task<ExternalRecipientDto> GetExternalRecipientByName(string name);
+        Task DeleteExternalRecipientById(int id);
     }
 }

@@ -26,6 +26,11 @@ namespace MessageTrack.BLL.Services
             return externalRecipientDtos;
         }
 
+        public async Task DeleteExternalRecipientById(int id)
+        {
+            await _unitOfWork.ExternalRecipientRepository.DeleteExternalRecipientById(id);
+        }
+
         public async Task<bool> CheckUniqueExternalRecipient(string name)
         {
             var externalRecipient = await _unitOfWork.ExternalRecipientRepository.GetExternalRecipientByName(name);

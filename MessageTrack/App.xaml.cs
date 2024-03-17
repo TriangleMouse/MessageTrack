@@ -10,6 +10,9 @@ using MessageTrack.DAL.Repositories.UnitOfWork;
 using AutoMapper;
 using MessageTrack.BLL.Infrastructure.Profiles;
 using MessageTrack.PL.Pages;
+using Serilog;
+using Serilog.Core;
+using Serilog.Events;
 
 namespace MessageTrack
 {
@@ -45,6 +48,7 @@ namespace MessageTrack
                 .AddTransient<DataViewModel>()
                 .AddTransient<SelectRecipientsModal>()
                 .AddTransient<SelectRecipientsViewModel>()
+                .AddSerilog(GetConfiguredLogger())
                 .BuildServiceProvider();
 
             // Resolve the MainWindow and set it as the application's main window
@@ -53,6 +57,24 @@ namespace MessageTrack
             mainWindow.Show();
 
             base.OnStartup(e);
+        }
+
+        private static Logger GetConfiguredLogger()
+        {
+            var logPath = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "\\Logs\\log.log");
+            var logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .WriteTo.Logger(config =>
+                    config.Filter.ByIncludingOnly(logEvent =>
+                        logEvent.Level == LogEventLevel.Information ||
+                        logEvent.Level == LogEventLevel.Error ||
+                        logEvent.Level == LogEventLevel.Warning ||
+                        logEvent.Level == LogEventLevel.Verbose
+                    ).WriteTo.File(logPath, rollingInterval: RollingInterval.Day)
+                ).CreateLogger();
+
+            Log.Logger = logger;
+            return logger;
         }
     }
 

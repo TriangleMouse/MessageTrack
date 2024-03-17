@@ -219,6 +219,9 @@ namespace MessageTrack.PL.ViewModels
 
         private async Task Delete(OutboxMessageModel message)
         {
+            if (MessageBox.Show("Вы уверены, что хотите удалить выбранную запись?", "Внимание!", MessageBoxButton.YesNo) == MessageBoxResult.No)
+                return;
+
             await _outboxMessageService.DeleteOutboxMessageById(message.Id.Value);
             _baseService.Commit();
             Messages.Remove(message);

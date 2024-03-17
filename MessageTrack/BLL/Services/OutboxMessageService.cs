@@ -11,7 +11,7 @@ namespace MessageTrack.BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        
+
         public OutboxMessageService(IMapper mapper, IUnitOfWork unitOfWork) : base(unitOfWork)
         {
             _mapper = mapper;
@@ -27,7 +27,16 @@ namespace MessageTrack.BLL.Services
             return outboxMessagesDtos;
         }
 
-        public async Task DeleteOutboxMessageById(int id)
+        public async Task<IEnumerable<OutboxMessageDto>> GetAllMessagesByExternalRecipientId(int externalRecipientId)
+        {
+            var outboxMessages = await _unitOfWork.OutboxMessageRepository.GetAllMessagesByExternalRecipientId(externalRecipientId);
+            var outboxMessagesDtos =
+                _mapper.Map<IEnumerable<OutboxMessage>, IEnumerable<OutboxMessageDto>>(outboxMessages);
+
+            return outboxMessagesDtos;
+        }
+
+    public async Task DeleteOutboxMessageById(int id)
         {
             await _unitOfWork.OutboxMessageRepository.DeleteOutboxMessageById(id);
         }

@@ -8,5 +8,6 @@ namespace MessageTrack.DAL.Interfaces.Repositories
         Task<int?> CreateExternalRecipient(ExternalRecipient externalRecipient);
         Task<ExternalRecipient> GetExternalRecipientByName(string name);
         Task<ExternalRecipient> GetExternalRecipientById(int id);
+        Task DeleteExternalRecipientById(int id);
     }
 }

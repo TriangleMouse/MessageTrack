@@ -60,5 +60,13 @@ namespace MessageTrack.DAL.Repositories.SqliteRepositories
 
             return externalRecipient;
         }
+
+        public async Task DeleteExternalRecipientById(int id)
+        {
+            await SafeExecuteAsync(async () =>
+            {
+                await Connection.ExecuteAsync("delete from External_Recipient where Id = @id", new { id = id }, transaction: Transaction);
+            });
+        }
     }
 }

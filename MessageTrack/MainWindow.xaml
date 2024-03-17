@@ -10,7 +10,6 @@
         Height="550"
         Width="900"
         WindowStyle="None"
-        ResizeMode="CanResizeWithGrip"
         AllowsTransparency="True" 
         MouseLeftButtonDown="Window_MouseLeftButtonDown"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -21,9 +20,9 @@
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
         FontFamily="{DynamicResource MaterialDesignFont}" Cursor="" BorderBrush="#FF1534AF" BorderThickness="0.4,0.4,0.4,0.4"
-        
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
         >
-
     <Window.Resources>
         <Style TargetType="{x:Type Border}">
             <Setter Property="CornerRadius" Value="15"/>

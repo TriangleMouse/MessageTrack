@@ -24,6 +24,19 @@ namespace MessageTrack.DAL.Repositories.SqliteRepositories
             return outboxMessages;
         }
 
+
+        public async Task<IEnumerable<OutboxMessage>> GetAllMessagesByExternalRecipientId(int externalRecipientId)
+        {
+            var outboxMessages = Enumerable.Empty<OutboxMessage>();
+
+            await SafeExecuteAsync(async () =>
+            {
+                outboxMessages = await Connection.QueryAsync<OutboxMessage>("select Id, DateCreated, RegNumber, ExternalRecipientId, Notes from Outbox_Message  where ExternalRecipientId = @externalRecipientId", new { externalRecipientId = externalRecipientId }, transaction: Transaction);
+            });
+
+            return outboxMessages;
+        }
+
         public async Task<OutboxMessage> GetLastOutboxMessage()
         {
             OutboxMessage message = default;
